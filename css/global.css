@@ -1,0 +1,25 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap");
+
+:root {
+  --title-color-primary: #105718;
+  --title-color-secondary: #4d9f4b;
+  --primary-color: #4d9f4b;
+  --secondary-color: #cfcccc;
+  --shadow-color-primary: #105718;
+  --shadow-color-secondary: #4d9f4b;
+  --background-main: #252525;
+  --live-color: #56cd42;
+  --died-color: #cd4242;
+  --unknown-color: #757575;
+  --card-text-color: #757575;
+  --footer-background: #151916;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: "Jakarta", sans-serif;
+}
