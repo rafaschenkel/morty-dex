@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./assets/img/RICK_MORTY_ICON.png" />
+    <title>API de Rick and Morty</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+  </head>
+  <link rel="stylesheet" href="./css/global.css" />
+  <link rel="stylesheet" href="./css/index.css" />
+  <body>
+    <header>
+      <nav class="navbar bg-white">
+        <div class="container-fluid">
+          <a href="/" class="navbar-brand">
+            <img
+              src="./assets/img/RICK_MORTY_ICON-01.svg"
+              alt="Logo do Rick and Morty"
+              width="40"
+              height="40"
+            />
+          </a>
+        </div>
+      </nav>
+
+      <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-12 text-center">
+            <h1 class="fw-bolder display-1">API de Rick and Morty</h1>
+          </div>
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="input-group-lg rounded">
+              <div class="input-group mb-3 rounded">
+                <input
+                  type="text"
+                  id="searchCharacter"
+                  class="form-control"
+                  placeholder="Pesquise"
+                  aria-label="Pesquise"
+                  aria-describedby="icon-search"
+                />
+                <span class="input-group-text icon-search" id="icon-search"
+                  ><i class="bi bi-search"></i
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-5">
+      <section class="container pt-5">
+        <div class="row row-gap-5 cards" id="cards"></div>
+      </section>
+      <div class="container pt-5">
+        <div class="row">
+          <div class="col-12">
+            <nav aria-label="Page navigation">
+              <ul class="pagination gap-2">
+                <li class="page-item">
+                  <button
+                    class="btn btn-lg btn-outline-success disabled"
+                    id="previousButton"
+                    type="button"
+                  >
+                    Anterior
+                  </button>
+                </li>
+                <li class="page-item">
+                  <button
+                    class="btn btn-lg btn-outline-success"
+                    id="nextButton"
+                    type="button"
+                  >
+                    Próximo
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="detailCharacter"
+        tabindex="-1"
+        aria-labelledby="Detalhes do personagem"
+        aria-hidden="true"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body position-relative">
+              <button
+                type="button"
+                id="btnCloseModal"
+                class="btn position-absolute btn-close-modal border-0 top-0 end-0 m-3 z-2"
+              >
+                <i class="bi bi-x-circle-fill fs-3"></i>
+              </button>
+              <div class="card card-modal" style="max-width: 540px">
+                <div class="row g-0">
+                  <div class="col-md-12">
+                    <img
+                      id="characterImage"
+                      src=""
+                      class="card-img rounded-start"
+                      alt="imagem do personagem..."
+                    />
+                  </div>
+                  <div class="col-md-12">
+                    <div class="card-body">
+                      <div class="container">
+                        <div class="row fs-5 fw-semibold">
+                          <div class="col-12">
+                            <h5
+                              id="characterName"
+                              class="card-title fs-3 fw-bold m-0"
+                            ></h5>
+                            <div class="d-flex align-items-center gap-2">
+                              <span
+                                id="characterStatusIcon"
+                                class="condition-icon"
+                              >
+                                <i class="bi bi-circle-fill"></i>
+                              </span>
+                              <p
+                                id="characterStatus"
+                                class="card-text condition text-light m-0"
+                              ></p>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <p class="fw-semibold m-0">Espécie:</p>
+                            <p id="characterSpecies" class="card-text"></p>
+                          </div>
+                          <div class="col-12">
+                            <p class="fw-semibold m-0">
+                              Última localização conhecida:
+                            </p>
+                            <p id="characterLocation" class="card-text"></p>
+                          </div>
+                          <div class="col-12">
+                            <p class="fw-semibold m-0">
+                              Visto a última vez em:
+                            </p>
+                            <p id="characterLastEpisode" class="card-text"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="pt-5">
+      <div
+        class="container pt-5 h-100 d-flex flex-column justify-content-between fw-semibold fs-6"
+      >
+        <div class="row justify-content-center pt-3">
+          <div class="col-12 col-md-2">
+            <p>PERSONAGENS: <span id="totalCharacters">XX</span></p>
+          </div>
+          <div class="col-12 col-md-2">
+            <p>LOCALIZAÇÕES: <span id="totalLocations">XX</span></p>
+          </div>
+          <div class="col-12 col-md-2">
+            <p>EPÍSODIOS: <span id="totalEpisodes">XX</span></p>
+          </div>
+        </div>
+        <div class="row text-center pb-4">
+          <div class="col-12">
+            <p>Desenvolvido por: <span>Rafael Schenkel</span> em 2025</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <!-- My scripts -->
+    <script src="./js/api.js"></script>
+    <script src="./js/index.js"></script>
+    <script src="./js/pagination.js"></script>
+    <script src="./js/modal.js"></script>
+  </body>
+</html>
