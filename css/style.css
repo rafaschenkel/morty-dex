@@ -1,0 +1,191 @@
+h1 {
+  animation: animarTitulo 2s linear infinite;
+}
+
+@keyframes animarTitulo {
+  0% {
+    color: var(--title-color-primary);
+  }
+
+  50% {
+    color: var(--title-color-secondary);
+  }
+
+  100% {
+    color: var(--title-color-primary);
+  }
+}
+
+.form-control {
+  color: var(--primary-color);
+  border-right: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+  color: var(--primary-color);
+  box-shadow: none;
+  border-color: var(--primary-color);
+
+  + .input-group-text {
+    border-color: var(--primary-color);
+  }
+}
+
+.input-group {
+  transition: all 0.2s ease-in-out;
+}
+
+.input-group:has(.form-control:focus) {
+  animation: animarInput 1s linear infinite;
+}
+
+@keyframes animarInput {
+  0% {
+    box-shadow: var(--shadow-color-primary) 0 0 10px 2px;
+  }
+
+  50% {
+    box-shadow: var(--shadow-color-secondary) 0 0 10px 2px;
+  }
+
+  100% {
+    box-shadow: var(--shadow-color-primary) 0 0 10px 2px;
+  }
+}
+
+.form-control::placeholder {
+  color: var(--secondary-color);
+}
+
+.input-group-text {
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.icon-search {
+  color: var(--primary-color);
+}
+
+main {
+  background-image: url("../assets/img/FUNDO.jpg");
+  background-position: center bottom;
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding-bottom: 250px;
+  background-color: var(--background-main);
+}
+
+@media screen and (min-width: 768px) {
+  main {
+    padding-bottom: 400px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  main {
+    padding-bottom: 700px;
+  }
+}
+
+.card {
+  max-width: 400px;
+  cursor: pointer;
+  position: relative;
+  border-color: var(--primary-color);
+  transition: all 0.2s ease-in-out;
+}
+
+.cards:hover .card {
+  opacity: 0.3;
+}
+
+.cards:hover .card:hover {
+  opacity: 1;
+  box-shadow: var(--shadow-color-secondary) 0 0 20px 10px;
+}
+
+.card .card-title {
+  color: #fff;
+}
+
+.card p {
+  color: #fff;
+}
+
+.card .card-text {
+  color: var(--card-text-color);
+}
+
+.alive {
+  color: var(--live-color);
+}
+
+.dead {
+  color: var(--died-color);
+}
+
+.unknown {
+  color: var(--unknown-color);
+}
+
+.card-modal {
+  border-color: var(--primary-color);
+  background-color: var(--background-main);
+  z-index: 1;
+}
+
+.modal-content {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--background-main);
+}
+
+.modal-content::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  width: 10px;
+  height: 200%;
+  background-color: #4d9f4b;
+  box-shadow: var(--shadow-color-secondary) 0 0 100px 100px;
+  animation: animarModal 3s linear infinite;
+}
+
+.modal-content::after {
+  content: "";
+  position: absolute;
+  background-color: var(--background-main);
+  inset: 1rem;
+  border-radius: inherit;
+}
+
+@keyframes animarModal {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-close-modal {
+  color: var(--primary-color);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-close-modal:hover {
+  color: #000;
+}
+
+footer {
+  height: 400px;
+  background-color: var(--footer-background);
+}
+
+footer p {
+  color: var(--primary-color);
+}
+
+footer p span {
+  color: #fff;
+}
