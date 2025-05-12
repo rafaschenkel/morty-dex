@@ -13,7 +13,9 @@ const btnCloseModal = document.getElementById("btnCloseModal");
 async function selectCharacter(id) {
   const response = await api.get(`/character/${id}`);
   const character = response.data;
-  const lastEpisode = await getLastEpisode(character.episode.length);
+  const lastEpisode = await getLastEpisode(
+    character.episode[character.episode.length - 1]
+  );
   const status = getStatus(character.status);
   const specie = getSpecie(character.species);
 
