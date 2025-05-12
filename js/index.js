@@ -14,8 +14,10 @@ function getStatus(status) {
       return "Vivo";
     case "Dead":
       return "Morto";
-    default:
+    case "unknown":
       return "Desconhecido";
+    default:
+      return status;
   }
 }
 
@@ -27,17 +29,14 @@ function getSpecie(specie) {
       return "Alienígena";
     case "Humanoid":
       return "Humanoide";
+    case "Robot":
+      return "Robô";
     default:
-      return "Desconhecido";
+      return specie;
   }
 }
 
-async function createCard(character) {
-  const status = getStatus(character.status);
-  const specie = getSpecie(character.species);
-
-  const lastEpisode = await getLastEpisode(character.episode.length);
-
+function createCard(character) {
   const card = document.createElement("div");
   card.classList.add(
     "col-12",
@@ -64,16 +63,16 @@ async function createCard(character) {
               <div class="d-flex align-items-center gap-2">
                 <span class="condition-icon">
                   <i class="bi bi-circle-fill ${
-                    character.status === "Alive"
+                    character.status === "Vivo"
                       ? "alive"
-                      : character.status === "Dead"
+                      : character.status === "Morto"
                       ? "dead"
                       : "unknown"
                   }">
                   </i>
                 </span>
                 <p class="card-text condition text-light m-0">
-                  ${status} - ${specie}
+                  ${character.status} - ${character.species}
                 </p>
               </div>
             </div>
@@ -86,7 +85,7 @@ async function createCard(character) {
             <div class="col-12">
               <p class="fw-semibold m-0">Visto a última vez em:</p> 
               <p class="card-text">
-                ${lastEpisode}
+                ${character.episode.name}
               </p>
             </div>
             
@@ -99,10 +98,11 @@ async function createCard(character) {
   return card;
 }
 
-async function renderCharacters(characters) {
+function renderCharacters(characters) {
   cards.innerHTML = "";
-  characters.forEach(async (character) => {
-    const characterCard = await createCard(character);
+
+  characters.forEach((character) => {
+    const characterCard = createCard(character);
     cards.appendChild(characterCard);
   });
 }
@@ -111,24 +111,15 @@ async function searchCharacter(e) {
   try {
     if (e.key === "Enter") {
       const response = await getCharacterByName(searchInput.value);
+      const charactersList = await normalizeCharacterList([
+        ...response.ListCharacters,
+      ]);
 
-      await renderCharacters(response.ListCharacters);
+      renderCharacters(charactersList);
+
       location.href = "#cards";
 
-      nextPage = response.nextPage;
-      prevPage = response.prevPage;
-
-      nextButton.addEventListener("click", () =>
-        pageChangeWithCharacterSearch(nextPage)
-      );
-      previousButton.addEventListener("click", () =>
-        pageChangeWithCharacterSearch(prevPage)
-      );
-
-      if (prevPage === null) previousButton.classList.add("disabled");
-      else previousButton.classList.remove("disabled");
-      if (nextPage === null) nextButton.classList.add("disabled");
-      else nextButton.classList.remove("disabled");
+      setLinkPages(response.prevPage, response.nextPage);
     }
   } catch (error) {
     alert("Personagem não encontrado");
@@ -138,17 +129,75 @@ async function searchCharacter(e) {
 const searchInput = document.getElementById("searchCharacter");
 searchInput.addEventListener("keydown", async (e) => searchCharacter(e));
 
+async function loadMainContent() {
+  try {
+    const response = await getCharactersByPage();
+    const charactersList = await normalizeCharacterList([
+      ...response.ListCharacters,
+    ]);
+
+    renderCharacters(charactersList);
+
+    nextButton.addEventListener("click", () => pageChange(nextPage));
+    previousButton.addEventListener("click", () => pageChange(prevPage));
+
+    setLinkPages(response.prevPage, response.nextPage);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function loadFooterContent() {
+  try {
+    const totalCharacters = await getInfoByFeature("character");
+    const totalLocations = await getInfoByFeature("location");
+    const totalEpisodes = await getInfoByFeature("episode");
+    totalCharactersSpan.textContent = totalCharacters;
+    totalLocationsSpan.textContent = totalLocations;
+    totalEpisodesSpan.textContent = totalEpisodes;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function main() {
-  totalCharactersSpan.textContent = await getInfoByFeature("character");
-  totalLocationsSpan.textContent = await getInfoByFeature("location");
-  totalEpisodesSpan.textContent = await getInfoByFeature("episode");
+  try {
+    await loadMainContent();
+    await loadFooterContent();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-  const response = await getCharactersByPage();
-  await renderCharacters(response.ListCharacters);
+async function normalizeCharacterList(charactersList) {
+  try {
+    for (const character of charactersList) {
+      const lastEpisodeURL = character.episode[character.episode.length - 1];
+      const lastEpisodeName = await getLastEpisode(lastEpisodeURL);
+      const status = getStatus(character.status);
+      const specie = getSpecie(character.species);
 
-  nextPage = response.nextPage;
-  prevPage = response.prevPage;
+      character.episode = {
+        url: lastEpisodeURL,
+        name: lastEpisodeName,
+      };
 
-  nextButton.addEventListener("click", () => pageChange(nextPage));
-  previousButton.addEventListener("click", () => pageChange(prevPage));
+      character.status = status;
+      character.species = specie;
+    }
+
+    return charactersList;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function setLinkPages(prevLink, nextLink) {
+  prevPage = prevLink;
+  nextPage = nextLink;
+
+  if (prevLink === null) previousButton.classList.add("disabled");
+  else previousButton.classList.remove("disabled");
+  if (nextLink === null) nextButton.classList.add("disabled");
+  else nextButton.classList.remove("disabled");
 }
