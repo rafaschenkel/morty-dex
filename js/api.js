@@ -49,9 +49,9 @@ async function getInfoByFeature(feature) {
   }
 }
 
-async function getLastEpisode(id) {
+async function getLastEpisode(url) {
   try {
-    const response = await api.get(`/episode/${id}`);
+    const response = await api.get(url);
     return response.data.name;
   } catch (error) {
     console.log(error);
