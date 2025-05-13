@@ -65,34 +65,17 @@
     <main class="pt-5">
       <!-- Cards -->
       <section class="container pt-5">
-        <div class="row row-gap-5 cards" id="cards"></div>
+        <div class="row row-gap-5 cards" id="cards">
+          <!-- Cards são renderizados aqui via JS -->
+        </div>
       </section>
 
       <!-- Pagination -->
       <section class="container pt-5">
         <div class="row">
           <div class="col-12">
-            <nav aria-label="Page navigation">
-              <ul class="pagination gap-2">
-                <li class="page-item">
-                  <button
-                    class="btn btn-lg btn-outline-success disabled"
-                    id="previousButton"
-                    type="button"
-                  >
-                    Anterior
-                  </button>
-                </li>
-                <li class="page-item">
-                  <button
-                    class="btn btn-lg btn-outline-success"
-                    id="nextButton"
-                    type="button"
-                  >
-                    Próximo
-                  </button>
-                </li>
-              </ul>
+            <nav aria-label="Page navigation" id="pagination">
+              <!-- Pagination são renderizados aqui via JS -->
             </nav>
           </div>
         </div>
@@ -208,7 +191,6 @@
     <!-- My scripts -->
     <script src="./js/api.js"></script>
     <script src="./js/index.js"></script>
-    <script src="./js/pagination.js"></script>
     <script src="./js/modal.js"></script>
   </body>
 </html>

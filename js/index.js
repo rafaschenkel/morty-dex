@@ -1,13 +1,6 @@
 document.addEventListener("DOMContentLoaded", main);
 const cards = document.getElementById("cards");
 
-const totalCharactersSpan = document.getElementById("totalCharacters");
-const totalLocationsSpan = document.getElementById("totalLocations");
-const totalEpisodesSpan = document.getElementById("totalEpisodes");
-
-const nextButton = document.getElementById("nextButton");
-const previousButton = document.getElementById("previousButton");
-
 function getStatus(status) {
   switch (status) {
     case "Alive":
@@ -107,41 +100,49 @@ function renderCharacters(characters) {
   });
 }
 
-async function searchCharacter(e) {
+async function searchCharacter() {
   try {
-    if (e.key === "Enter") {
-      const response = await getCharacterByName(searchInput.value);
-      const charactersList = await normalizeCharacterList([
-        ...response.ListCharacters,
-      ]);
-
-      renderCharacters(charactersList);
-
-      location.href = "#cards";
-
-      setLinkPages(response.prevPage, response.nextPage);
-    }
+    const url = `https://rickandmortyapi.com/api/character/?name=${searchInput.value}&page=1`;
+    await loadMainContent(url);
+    location.href = "#cards";
   } catch (error) {
     alert("Personagem não encontrado");
   }
 }
 
 const searchInput = document.getElementById("searchCharacter");
-searchInput.addEventListener("keydown", async (e) => searchCharacter(e));
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    searchCharacter();
+  }
+});
+const searchIcon = document.getElementById("icon-search");
+searchIcon.addEventListener("click", () => {
+  searchCharacter();
+});
 
-async function loadMainContent() {
+async function loadMainContent(url) {
   try {
-    const response = await getCharactersByPage();
-    const charactersList = await normalizeCharacterList([
-      ...response.ListCharacters,
-    ]);
+    const params = new URLSearchParams(new URL(url).search);
+    const name = params.get("name");
+    const page = params.get("page");
 
+    let charactersList;
+    let response;
+
+    if (name) {
+      response = await getCharacterByName(name, page);
+      charactersList = await normalizeCharacterList([
+        ...response.ListCharacters,
+      ]);
+    } else {
+      response = await getCharactersByPage(page);
+      charactersList = await normalizeCharacterList([
+        ...response.ListCharacters,
+      ]);
+    }
     renderCharacters(charactersList);
-
-    nextButton.addEventListener("click", () => pageChange(nextPage));
-    previousButton.addEventListener("click", () => pageChange(prevPage));
-
-    setLinkPages(response.prevPage, response.nextPage);
+    renderPagination(response.prevPage, response.nextPage);
   } catch (error) {
     console.log(error);
   }
@@ -149,21 +150,17 @@ async function loadMainContent() {
 
 async function loadFooterContent() {
   try {
+    const totalCharactersSpan = document.getElementById("totalCharacters");
+    const totalLocationsSpan = document.getElementById("totalLocations");
+    const totalEpisodesSpan = document.getElementById("totalEpisodes");
+
     const totalCharacters = await getInfoByFeature("character");
     const totalLocations = await getInfoByFeature("location");
     const totalEpisodes = await getInfoByFeature("episode");
+
     totalCharactersSpan.textContent = totalCharacters;
     totalLocationsSpan.textContent = totalLocations;
     totalEpisodesSpan.textContent = totalEpisodes;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function main() {
-  try {
-    await loadMainContent();
-    await loadFooterContent();
   } catch (error) {
     console.log(error);
   }
@@ -192,12 +189,53 @@ async function normalizeCharacterList(charactersList) {
   }
 }
 
-function setLinkPages(prevLink, nextLink) {
-  prevPage = prevLink;
-  nextPage = nextLink;
+function renderPagination(prevLink, nextLink) {
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
 
-  if (prevLink === null) previousButton.classList.add("disabled");
-  else previousButton.classList.remove("disabled");
-  if (nextLink === null) nextButton.classList.add("disabled");
-  else nextButton.classList.remove("disabled");
+  const ul = document.createElement("ul");
+  ul.classList.add("pagination", "gap-3", "justify-content-center");
+
+  const liPrevPage = document.createElement("li");
+  liPrevPage.classList.add("page-item");
+
+  const prevButton = document.createElement("button");
+  prevButton.classList.add("btn", "btn-lg");
+  prevLink === null
+    ? prevButton.classList.add("disabled", "btn-outline-success")
+    : prevButton.classList.add("btn-success");
+  prevButton.innerHTML = "Anterior";
+  prevButton.addEventListener("click", async () => {
+    await loadMainContent(prevLink);
+    location.href = "#cards";
+  });
+
+  const liNextPage = document.createElement("li");
+  liNextPage.classList.add("page-item");
+
+  const nextButton = document.createElement("button");
+  nextButton.classList.add("btn", "btn-lg");
+  nextLink === null
+    ? nextButton.classList.add("disabled", "btn-outline-success")
+    : nextButton.classList.add("btn-success");
+  nextButton.innerHTML = "Próximo";
+  nextButton.addEventListener("click", async () => {
+    await loadMainContent(nextLink);
+    location.href = "#cards";
+  });
+
+  liPrevPage.appendChild(prevButton);
+  liNextPage.appendChild(nextButton);
+  ul.appendChild(liPrevPage);
+  ul.appendChild(liNextPage);
+  pagination.appendChild(ul);
+}
+
+async function main() {
+  try {
+    await loadMainContent("https://rickandmortyapi.com/api/character/?page=1");
+    await loadFooterContent();
+  } catch (error) {
+    console.log(error);
+  }
 }
