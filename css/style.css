@@ -134,6 +134,7 @@ main {
   border-color: var(--primary-color);
   background-color: var(--background-main);
   z-index: 1;
+  cursor: default;
 }
 
 .modal-content {
@@ -169,12 +170,15 @@ main {
 }
 
 .btn-close-modal {
-  color: var(--primary-color);
-  transition: all 0.2s ease-in-out;
+  color: #000;
+  transition: all 0.3s ease-in-out;
+  background-color: var(--primary-color);
+  border-radius: 0 0 0 20px;
 }
 
 .btn-close-modal:hover {
-  color: #000;
+  background-color: #222;
+  color: var(--primary-color);
 }
 
 footer {
