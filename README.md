@@ -11,7 +11,7 @@ Com um layout responsivo e visual intuitivo, o projeto permite navegar pelos per
 Este projeto foi desenvolvido com foco em praticar o consumo de APIs REST, manipulação do DOM, tratamento de dados e construção de interfaces responsivas utilizando tecnologias essenciais do front-end.
 
 📌 **Acesse o projeto online:**  
-🔗 [https://rafaschenkel.github.io/bootcamp-growdev/](https://rafaschenkel.github.io/bootcamp-growdev/)
+🔗 [https://rafaschenkel.github.io/bootcamp-growdev/](https://rafaschenkel.github.io/morty-dex/)
 
 ---
 
